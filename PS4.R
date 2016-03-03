@@ -29,22 +29,10 @@ split_percent <- function(x) substring(x, 1, nchar(x)-1)
 table$`Popular vote (%)` <- as.numeric(sapply(table$`Popular vote (%)`, split_percent))
 table$Turnout <- as.numeric(sapply(table$Turnout, split_percent))
 table$Turnout [c(16,46)] <- c(50,60)
-
-# Creates a boxplot of popular vote percents by party
-boxplot(table$`Popular vote (%)` ~ table$Party, 
-        ylab="Popular Vote %", 
-        xlab="Party",
-        border=c("purple4", "navy", "darkred", "yellow4"),
-        col=c("purple", "blue", "red", "yellow"),
-        main="Boxplot of Popular Vote by Party",
-        pch="L"
-       )
-legend("bottomright", "L is Lincoln in 1860")
-
 # count total number of victories of each party, and their victories after 1800
 num_victories <-count(table, 'Party')
 new_table <- arrange(table, table$Year)
-num_1900_victories <- count(table[20:48,], 'Party')
+num_1900_victories <- count(new_table[20:48,], 'Party')
 # Puts total victories next to 1900 victories
 victories_total <- c(num_victories$freq[1],0,
                      num_victories$freq[2], num_1900_victories$freq[1],
@@ -53,7 +41,24 @@ victories_total <- c(num_victories$freq[1],0,
                      )
 X_names <- c("D.-R.", "Post-1900", "Democrats","Post-1900", "Republicans", "Post-1900", "Whigs", "Post-1900")
 
+par(mar=c(5,5,5,1))
+# Creates a boxplot of popular vote percents by party
+# We can see that Republicans have done slightly better than democrats on average
+# and whigs/DR have been worse off. Lincoln was a true outlier and Democrats achieved
+# the highest percent vote ever.
+boxplot(table$`Popular vote (%)` ~ table$Party, 
+        ylab="Popular Vote %", 
+        xlab="Party",
+        border=c("purple4", "navy", "darkred", "yellow4"),
+        col=c("purple", "blue", "red", "yellow"),
+        main="Boxplot of Popular Vote by Party",
+        pch="L"
+)
+legend("bottomright", "L is Lincoln in 1860")
+
 # Plot each party based on their total number of victories, and their victories after 1900
+# We can see Republicans and Democrats have been equal in both centuries, but whigs and D-R
+# were only successful in the 1800's
 barplot(victories_total,
         col=c("purple","purple", "blue", "darkblue", "red","darkred", "yellow","yellow4"),
         names.arg = X_names,
