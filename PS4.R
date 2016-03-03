@@ -14,20 +14,32 @@ table <- data[[1]]
 # Remove empty rows
 table <- table[-c(1,2),]
 rownames(table) <- NULL
-str(table)
+# Take out unused columns and rename columns
 colnames(table) [3] <- "Winner"
 table [8] <- NULL
 table[6] <- NULL
 colnames(table)[7] <- "Runner Up"
 # Function to pull out names of losers and winners 
 split_names <- function(x) substring(x,(nchar(x)/2)+2 )
-# Apply functions to the data frame
 table$Winner<- sapply(table$Winner, split_names)
 table$`Runner Up` <- sapply(table$`Runner Up`, split_names)
 # Turns percent values from character to numeric
 split_percent <- function(x) substring(x, 1, nchar(x)-1)
 table$`Popular vote (%)` <- as.numeric(sapply(table$`Popular vote (%)`, split_percent))
 table$Turnout <- as.numeric(sapply(table$Turnout, split_percent))
+table$Turnout [c(16,46)] <- c(50,60)
+
+# Creates a boxplot of popular vote percents by party
+boxplot(table$`Popular vote (%)` ~ table$Party, 
+        ylab="Popular Vote %", 
+        xlab="Party",
+        border=c("purple4", "navy", "darkred", "yellow4"),
+        col=c("purple", "blue", "red", "yellow"),
+        main="Boxplot of Popular Vote by Party",
+        pch="L"
+       )
+legend("bottomright", "L is Lincoln in 1860")
+
 
 
 
