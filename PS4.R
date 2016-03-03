@@ -1,5 +1,6 @@
 install.packages("rvest")
-library(rvest)    
+library(rvest)  
+library(plyr)
 wikiURL <- 'https://en.wikipedia.org/wiki/List_of_United_States_presidential_elections_by_popular_vote_margin'
 
 ## Grab the tables from the page and use the html_table function to extract the tables.
@@ -8,7 +9,7 @@ wikiURL <- 'https://en.wikipedia.org/wiki/List_of_United_States_presidential_ele
 temp <- wikiURL %>% 
   read_html %>%
   html_nodes("table")
- 
+# Take only table 2
 data <- html_table(temp [2], header=TRUE)
 table <- data[[1]]
 # Remove empty rows
@@ -40,6 +41,28 @@ boxplot(table$`Popular vote (%)` ~ table$Party,
        )
 legend("bottomright", "L is Lincoln in 1860")
 
+# count total number of victories of each party, and their victories after 1800
+num_victories <-count(table, 'Party')
+new_table <- arrange(table, table$Year)
+num_1900_victories <- count(table[20:48,], 'Party')
+# Puts total victories next to 1900 victories
+victories_total <- c(num_victories$freq[1],0,
+                     num_victories$freq[2], num_1900_victories$freq[1],
+                     num_victories$freq[3], num_1900_victories$freq[2],
+                     num_victories$freq[4], num_1900_victories$freq[3]
+                     )
+X_names <- c("D.-R.", "Post-1900", "Democrats","Post-1900", "Republicans", "Post-1900", "Whigs", "Post-1900")
+
+# Plot each party based on their total number of victories, and their victories after 1900
+barplot(victories_total,
+        col=c("purple","purple", "blue", "darkblue", "red","darkred", "yellow","yellow4"),
+        names.arg = X_names,
+        xlab="",
+        ylab="Number of Victories",
+        main="Success of Political Parties",
+        las=2
+)
+mtext("Party", side=1)
 
 
 
