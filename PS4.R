@@ -24,4 +24,10 @@ split_names <- function(x) substring(x,(nchar(x)/2)+2 )
 # Apply functions to the data frame
 table$Winner<- sapply(table$Winner, split_names)
 table$`Runner Up` <- sapply(table$`Runner Up`, split_names)
+# Turns percent values from character to numeric
+split_percent <- function(x) substring(x, 1, nchar(x)-1)
+table$`Popular vote (%)` <- as.numeric(sapply(table$`Popular vote (%)`, split_percent))
+table$Turnout <- as.numeric(sapply(table$Turnout, split_percent))
+
+
 
