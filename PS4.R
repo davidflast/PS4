@@ -41,11 +41,12 @@ victories_total <- c(num_victories$freq[1],0,
                      )
 X_names <- c("D.-R.", "Post-1900", "Democrats","Post-1900", "Republicans", "Post-1900", "Whigs", "Post-1900")
 
-par(mar=c(5,5,5,1))
+par(mfrow=c(2,1))
 # Creates a boxplot of popular vote percents by party
 # We can see that Republicans have done slightly better than democrats on average
 # and whigs/DR have been worse off. Lincoln was a true outlier and Democrats achieved
 # the highest percent vote ever.
+par(mar=c(5,5,3,3))
 boxplot(table$`Popular vote (%)` ~ table$Party, 
         ylab="Popular Vote %", 
         xlab="Party",
@@ -54,11 +55,12 @@ boxplot(table$`Popular vote (%)` ~ table$Party,
         main="Boxplot of Popular Vote by Party",
         pch="L"
 )
-legend("bottomright", "L is Lincoln in 1860")
+mtext("L is Lincoln in 1860",side=4)
 
 # Plot each party based on their total number of victories, and their victories after 1900
 # We can see Republicans and Democrats have been equal in both centuries, but whigs and D-R
 # were only successful in the 1800's
+par(mar=c(7,5,3,1))
 barplot(victories_total,
         col=c("purple","purple", "blue", "darkblue", "red","darkred", "yellow","yellow4"),
         names.arg = X_names,
